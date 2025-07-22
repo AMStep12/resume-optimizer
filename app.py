@@ -80,8 +80,10 @@ def generate_pdf(chart_img, feedback_text, job_title, company_name):
     pdf_buffer.seek(0)
     return pdf_buffer
 
-# Process resume if everything is filled
-if uploaded_file and job_description and job_title and company_name:
+# Step 1: Upload file and extract text only
+resume_text = None
+
+if uploaded_file:
     st.write("Uploaded file:", uploaded_file.name)
 
     try:
@@ -90,71 +92,76 @@ if uploaded_file and job_description and job_title and company_name:
         else:
             resume_text = extract_text_from_docx(uploaded_file)
 
-        st.success("Resume, job info, and job description loaded!")
-
-        if st.button("🔍 Analyze Resume"):
-            try:
-                with st.spinner("Analyzing with GPT..."):
-                    prompt = build_prompt(resume_text, job_description)
-                    response = client.chat.completions.create(
-                        model="gpt-3.5-turbo",
-                        messages=[
-                            {"role": "system", "content": "You are a helpful resume optimization assistant."},
-                            {"role": "user", "content": prompt}
-                        ],
-                        temperature=0.5
-                    )
-
-                    output = response.choices[0].message.content
-
-                    # Extract scores
-                    categories = ["Skills Match", "Keyword Match", "Experience Relevance", "Role Alignment", "Formatting & Clarity"]
-                    scores = []
-                    for category in categories:
-                        match = re.search(rf"{category}:\s*(\d+)", output)
-                        if match:
-                            scores.append(int(match.group(1)))
-                        else:
-                            scores.append(0)
-
-                    # Radar chart
-                    labels = categories
-                    num_vars = len(labels)
-                    scores += scores[:1]
-                    angles = np.linspace(0, 2 * np.pi, num_vars, endpoint=False).tolist()
-                    angles += angles[:1]
-
-                    fig, ax = plt.subplots(figsize=(6, 6), subplot_kw=dict(polar=True))
-                    ax.plot(angles, scores, color='blue', linewidth=2)
-                    ax.fill(angles, scores, color='skyblue', alpha=0.4)
-                    ax.set_yticks([2, 4, 6, 8, 10])
-                    ax.set_yticklabels(['2', '4', '6', '8', '10'])
-                    ax.set_xticks(angles[:-1])
-                    ax.set_xticklabels(labels)
-                    ax.set_title("ATS Resume Match Breakdown", size=14, y=1.08)
-                    st.pyplot(fig)
-
-                    # Feedback
-                    st.markdown("### 📋 Feedback")
-                    st.markdown(output)
-
-                    # Save chart image
-                    chart_buffer = BytesIO()
-                    fig.savefig(chart_buffer, format="png")
-                    chart_buffer.seek(0)
-
-                    # Generate and download PDF
-                    pdf_file = generate_pdf(chart_buffer, output, job_title, company_name)
-                    st.download_button(
-                        label="📥 Download PDF Report",
-                        data=pdf_file,
-                        file_name="resume_analysis_report.pdf",
-                        mime="application/pdf"
-                    )
-
-            except Exception as e:
-                st.error(f"Something went wrong during processing. Error: {e}")
+        st.success("Resume uploaded successfully.")
 
     except Exception as e:
-        st.error(f"Failed to process resume. Try a smaller or simpler file.\n\nError: {e}")
+        st.error(f"Failed to process resume. Try a simpler file.\n\nError: {e}")
         st.stop()
+
+# Step 2: Show analysis button if all inputs are present
+if resume_text and job_description and job_title and company_name:
+    if st.button("🔍 Analyze Resume"):
+        try:
+            with st.spinner("Analyzing with GPT..."):
+                # GPT call
+                prompt = build_prompt(resume_text, job_description)
+                response = client.chat.completions.create(
+                    model="gpt-3.5-turbo",
+                    messages=[
+                        {"role": "system", "content": "You are a helpful resume optimization assistant."},
+                        {"role": "user", "content": prompt}
+                    ],
+                    temperature=0.5
+                )
+
+                output = response.choices[0].message.content
+
+                # Extract scores
+                categories = ["Skills Match", "Keyword Match", "Experience Relevance", "Role Alignment", "Formatting & Clarity"]
+                scores = []
+                for category in categories:
+                    match = re.search(rf"{category}:\s*(\d+)", output)
+                    if match:
+                        scores.append(int(match.group(1)))
+                    else:
+                        scores.append(0)
+
+                # Radar chart
+                labels = categories
+                num_vars = len(labels)
+                scores += scores[:1]
+                angles = np.linspace(0, 2 * np.pi, num_vars, endpoint=False).tolist()
+                angles += angles[:1]
+
+                fig, ax = plt.subplots(figsize=(6, 6), subplot_kw=dict(polar=True))
+                ax.plot(angles, scores, color='blue', linewidth=2)
+                ax.fill(angles, scores, color='skyblue', alpha=0.4)
+                ax.set_yticks([2, 4, 6, 8, 10])
+                ax.set_yticklabels(['2', '4', '6', '8', '10'])
+                ax.set_xticks(angles[:-1])
+                ax.set_xticklabels(labels)
+                ax.set_title("ATS Resume Match Breakdown", size=14, y=1.08)
+                st.pyplot(fig)
+
+                # Feedback
+                st.markdown("### 📋 Feedback")
+                st.markdown(output)
+
+                # Save chart image
+                chart_buffer = BytesIO()
+                fig.savefig(chart_buffer, format="png")
+                chart_buffer.seek(0)
+
+                # Generate PDF
+                pdf_file = generate_pdf(chart_buffer, output, job_title, company_name)
+                st.download_button(
+                    label="📥 Download PDF Report",
+                    data=pdf_file,
+                    file_name="resume_analysis_report.pdf",
+                    mime="application/pdf"
+                )
+
+        except Exception as e:
+            st.error(f"Something went wrong during processing. Error: {e}")
+else:
+    st.info("Please upload your resume and fill in job title, company name, and job description.")
