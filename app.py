@@ -1,6 +1,11 @@
 # app.py
 import streamlit as st
 
+# 🔐 Maintenance toggle
+if st.secrets.get("APP_ACTIVE") != "true":
+    st.error("🚧 This app is temporarily offline for updates.")
+    st.stop()
+
 st.set_page_config(page_title="Resume Optimizer", layout="centered")
 
 st.sidebar.title("📂 Navigation")
@@ -21,3 +26,8 @@ elif page == "🧪 Analyze Resume":
 elif page == "📥 Generate PDF Report":
     import report_export
     report_export.run()
+
+# 📬 Footer contact info
+st.sidebar.markdown("---")
+st.sidebar.caption("Built by Your Name")
+st.sidebar.caption("📬 your@email.com")
