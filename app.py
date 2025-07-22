@@ -96,7 +96,13 @@ if uploaded_file and job_description and job_title and company_name:
     st.success("Resume, job info, and job description loaded!")
 
     if st.button("🔍 Analyze Resume"):
-        with st.spinner("Analyzing with GPT..."):
+        try:
+            with st.spinner("Analyzing with GPT..."):
+            # your existing code here...
+            ...
+        except Exception as e:
+        st.error(f"Something went wrong during processing. Error: {e}")
+
             try:
                 prompt = build_prompt(resume_text, job_description)
                 response = client.chat.completions.create(
