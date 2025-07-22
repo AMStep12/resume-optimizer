@@ -5,7 +5,12 @@ import streamlit as st
 if st.secrets.get("APP_ACTIVE") != "true":
     st.error("🚧 This app is temporarily offline for updates.")
     st.stop()
-
+# 🔑 Password gate
+password = st.text_input("🔐 Enter access password", type="password")
+if password != st.secrets.get("APP_PASSWORD"):
+    st.warning("Access denied. Please enter the correct password.")
+    st.stop()
+    
 st.set_page_config(page_title="Resume Optimizer", layout="centered")
 
 st.sidebar.title("📂 Navigation")
