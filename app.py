@@ -29,5 +29,5 @@ elif page == "📥 Generate PDF Report":
 
 # 📬 Footer contact info
 st.sidebar.markdown("---")
-st.sidebar.caption("Built by Your Name")
-st.sidebar.caption("📬 your@email.com")
+st.sidebar.caption("Built by Aaron Stephenson")
+st.sidebar.caption("📬 caringzulu5@gmail.com")
