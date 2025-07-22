@@ -44,7 +44,7 @@ Return your answer in this format:
                 client = openai.OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
                 response = client.chat.completions.create(
-                    model="gpt-4",
+                    model="gpt-3.5-turbo",
                     messages=[
                         {"role": "system", "content": "You are a helpful resume optimization assistant."},
                         {"role": "user", "content": prompt}
