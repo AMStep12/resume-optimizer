@@ -20,18 +20,9 @@ def run():
     job_description = st.text_area("📝 Paste the job description")
 
     if uploaded_file:
-        try:
-            if uploaded_file.name.endswith(".pdf"):
-                resume_text = extract_text_from_pdf(uploaded_file)
-            else:
-                resume_text = extract_text_from_docx(uploaded_file)
-
-            st.success("Resume uploaded successfully.")
-            st.session_state.resume_text = resume_text
-            st.session_state.file_uploaded = True
-        except Exception as e:
-            st.error(f"Failed to process resume. Try a simpler file.\n\nError: {e}")
-            st.stop()
+        st.session_state.uploaded_file = uploaded_file
+        st.success("Resume uploaded. Ready to analyze.")
+        st.session_state.file_uploaded = True
 
     if (
         st.session_state.get("file_uploaded")
@@ -41,6 +32,13 @@ def run():
     ):
         if st.button("🔍 Analyze Resume"):
             try:
+                resume_file = st.session_state.uploaded_file
+                if resume_file.name.endswith(".pdf"):
+                    resume_text = extract_text_from_pdf(resume_file)
+                else:
+                    resume_text = extract_text_from_docx(resume_file)
+
+                st.session_state.resume_text = resume_text
                 st.session_state.job_title = job_title
                 st.session_state.company_name = company_name
                 st.session_state.job_description = job_description
@@ -82,6 +80,7 @@ JOB DESCRIPTION:
 
                 output = response.choices[0].message.content
                 st.session_state.feedback = output
+                st.session_state.feedback_text = output
 
                 # Extract scores
                 categories = [
