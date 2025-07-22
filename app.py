@@ -53,6 +53,8 @@ Return your answer in this format:
                 )
 
                 output = response.choices[0].message.content
+                st.markdown("### 📋 Feedback")
+                st.markdown(output)
 
 
             except Exception as e:
