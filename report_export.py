@@ -40,14 +40,9 @@ def generate_pdf(chart_img_bytes, feedback_text, job_title, company_name):
     return pdf_buffer
 
 def run():
-    st.title("📄 Download Resume Report")
+    st.title("📥 Download Resume Report")
 
-    if (
-        "feedback_text" not in st.session_state or
-        "job_title" not in st.session_state or
-        "company_name" not in st.session_state or
-        "chart_image" not in st.session_state
-    ):
+    if not all(k in st.session_state for k in ["feedback_text", "chart_image", "job_title", "company_name"]):
         st.warning("⚠️ You need to analyze a resume first on the 'Analyze Resume' page.")
         return
 
