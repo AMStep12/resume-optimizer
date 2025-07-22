@@ -68,6 +68,39 @@ JOB DESCRIPTION:
                 )
 
                 output = response.choices[0].message.content
+                
+
+# Parse category scores from GPT response
+categories = ["Skills Match", "Keyword Match", "Experience Relevance", "Role Alignment", "Formatting & Clarity"]
+scores = []
+
+for category in categories:
+    match = re.search(rf"{category}:\s*(\d+)", output)
+    if match:
+        scores.append(int(match.group(1)))
+    else:
+        scores.append(0)  # default if missing
+
+# Close radar loop
+scores += scores[:1]
+labels = categories + categories[:1]
+
+# Radar chart
+angles = np.linspace(0, 2 * np.pi, len(labels), endpoint=False).tolist()
+scores = np.array(scores)
+angles += angles[:1]
+
+fig, ax = plt.subplots(figsize=(6, 6), subplot_kw=dict(polar=True))
+ax.plot(angles, scores, color='blue', linewidth=2)
+ax.fill(angles, scores, color='skyblue', alpha=0.4)
+ax.set_yticks([2, 4, 6, 8, 10])
+ax.set_yticklabels(['2', '4', '6', '8', '10'])
+ax.set_xticks(angles[:-1])
+ax.set_xticklabels(categories)
+ax.set_title("ATS Resume Match Breakdown", size=14, y=1.08)
+
+st.pyplot(fig)
+
                 st.markdown("### 📋 Feedback")
                 st.markdown(output)
 
