@@ -77,9 +77,12 @@ JOB DESCRIPTION:
                     else:
                         scores.append(0)
 
+                # Prepare for radar chart
+                labels = categories
+                num_vars = len(labels)
+                
                 # ✅ Radar chart
                 scores += scores[:1]
-                labels = categories + categories[:1]
                 angles = np.linspace(0, 2 * np.pi, len(labels), endpoint=False).tolist()
                 angles += angles[:1]
 
