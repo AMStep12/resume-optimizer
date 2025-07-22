@@ -2,6 +2,9 @@
 import streamlit as st
 import openai
 from utils import extract_text_from_pdf, extract_text_from_docx
+import re
+import matplotlib.pyplot as plt
+import numpy as np
 
 # 👉 REPLACE THIS WITH YOUR ACTUAL API KEY
 openai.api_key = st.secrets.get("OPENAI_API_KEY", "sk-...your-key-here...")
