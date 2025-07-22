@@ -10,34 +10,7 @@ if st.secrets.get("APP_ACTIVE") != "true":
 # 🔑 Password gate
 password = st.text_input("🔐 Enter access password", type="password")
 if password != st.secrets.get("APP_PASSWORD"):
-    st.warning("Access denied. Please enter the correct password.")
-    st.stop()
-
-st.set_page_config(page_title="Resume Optimizer", layout="centered")
-
-st.sidebar.title("📂 Navigation")
-page = st.sidebar.radio("Go to", [
-    "📄 Upload Resume",
-    "🧪 Analyze Resume",
-    "📥 Generate PDF Report"
-])
-
-if page == "📄 Upload Resume":
-    import upload_resume
-    upload_resume.run()
-
-elif page == "🧪 Analyze Resume":
-    import analyze_resume
-    analyze_resume.run()
-
-elif page == "📥 Generate PDF Report":
-    import report_export
-    report_export.run()
-
-# 📬 Footer contact info
-st.sidebar.markdown("---")
-st.sidebar.caption("Built by Your Name")
-st.sidebar.caption("📬 your@email.com")
+    st.warning("Access denied. Please enter the correct password")
 
     
 st.set_page_config(page_title="Resume Optimizer", layout="centered")
