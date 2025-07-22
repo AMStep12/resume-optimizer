@@ -12,6 +12,9 @@ client = openai.OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 st.set_page_config(page_title="Resume Optimizer", layout="centered")
 st.title("📄 GPT-Powered Resume Optimizer")
 st.write("Upload your resume and paste a job description. Let AI help you stand out!")
+job_title = st.text_input("Target Job Title (for the report)", placeholder="e.g. Data Analyst")
+company_name = st.text_input("Company Name (for the report)", placeholder="e.g. Amazon")
+
 
 uploaded_file = st.file_uploader("Upload your resume (PDF or DOCX)", type=["pdf", "docx"])
 job_description = st.text_area("Paste the job description you're targeting")
