@@ -25,20 +25,32 @@ if uploaded_file and job_description:
     if st.button("🔍 Analyze Resume"):
         with st.spinner("Analyzing with GPT..."):
 
-            prompt = f"""
-You are an expert resume coach. Analyze the resume below and compare it to the job description. 
-Provide improvement suggestions, missing keywords, and highlight strengths and weaknesses. 
+prompt = f"""
+You are an AI resume reviewer. Compare the following resume to the job description. 
+
+Score each of these categories from 0–10:
+- Skills Match
+- Keyword Match
+- Experience Relevance
+- Role Alignment
+- Formatting & Clarity
+
+Output the scores in this exact format:
+Skills Match: #
+Keyword Match: #
+Experience Relevance: #
+Role Alignment: #
+Formatting & Clarity: #
+
+Then follow with your improvement suggestions and one-paragraph summary.
 
 RESUME:
 {resume_text}
 
 JOB DESCRIPTION:
 {job_description}
-
-Return your answer in this format:
-1. Bullet point suggestions for improvement
-2. One paragraph summary
 """
+
 
             try:
                 client = openai.OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
