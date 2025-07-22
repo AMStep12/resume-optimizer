@@ -1,34 +1,31 @@
 # 📄 GPT-Powered Resume Optimizer
 
-AI-powered resume analyzer that compares your resume to a job description and gives you:
-- ✅ Targeted feedback
-- 📊 Radar chart (ATS-style) with scoring
-- 🧾 PDF report with detailed suggestions
+An AI-powered Streamlit app that analyzes your resume against a job description and provides:
 
-Built using **Python**, **Streamlit**, **OpenAI GPT**, and **Matplotlib**.
-
----
-
-## 🚀 Features
-
-- Upload a resume (PDF or DOCX)
-- Input job title, company name, and job description
-- GPT compares your resume to job listing
-- Scores 5 key categories:
-  - Skills Match
-  - Keyword Match
-  - Experience Relevance
-  - Role Alignment
-  - Formatting & Clarity
-- Generates radar chart
-- Creates downloadable PDF report
+- ✅ Detailed ATS-style scoring (Skills, Keywords, Experience, etc.)
+- 📊 Radar chart visualization of your match
+- 📝 Tailored feedback and improvement tips
+- 📥 Downloadable PDF report for sharing or reference
 
 ---
 
-## 🛠️ How to Run Locally
+## 🚀 How It Works
 
-### 1. Clone the repo
+1. **Upload** your resume (PDF or DOCX)
+2. **Enter** the job title, company name, and job description
+3. **Analyze** with GPT to get scores, chart, and feedback
+4. **Export** everything as a downloadable PDF report
+
+---
+
+## 📁 Project Structure
 
 ```bash
-git clone https://github.com/your-username/resume-optimizer.git
-cd resume-optimizer
+resume-optimizer/
+├── app.py
+├── upload_resume.py
+├── analyze_resume.py
+├── report_export.py
+├── utils.py
+├── requirements.txt
+└── README.md
