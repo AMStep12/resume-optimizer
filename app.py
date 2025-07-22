@@ -98,8 +98,7 @@ if uploaded_file and job_description and job_title and company_name:
     if st.button("🔍 Analyze Resume"):
         try:
             with st.spinner("Analyzing with GPT..."):
-            # your existing code here...
-            ...
+                
         except Exception as e:
         st.error(f"Something went wrong during processing. Error: {e}")
 
