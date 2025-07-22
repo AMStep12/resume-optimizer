@@ -41,7 +41,9 @@ Return your answer in this format:
 """
 
             try:
-                response = openai.ChatCompletion.create(
+                client = openai.OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+
+                response = client.chat.completions.create(
                     model="gpt-4",
                     messages=[
                         {"role": "system", "content": "You are a helpful resume optimization assistant."},
@@ -50,9 +52,8 @@ Return your answer in this format:
                     temperature=0.5
                 )
 
-                output = response["choices"][0]["message"]["content"]
-                st.markdown("### 📋 Feedback")
-                st.markdown(output)
+                output = response.choices[0].message.content
+
 
             except Exception as e:
                 st.error(f"Error calling OpenAI API: {e}")
