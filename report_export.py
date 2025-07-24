@@ -34,5 +34,31 @@ def generate_pdf(chart_img, feedback_text, job_title, company_name):
     pdf.ln(5)
     pdf.set_font("Arial", "", 11)
 
-    for line in feedback_text.sp_
+    for line in feedback_text.split("\n"):
+        pdf.multi_cell(0, 8, line)
 
+    # Export PDF as bytes
+    pdf_output = pdf.output(dest="S").encode("latin-1")
+    return pdf_output
+
+def run():
+    st.title("📄 Export Resume Feedback as PDF")
+
+    if "feedback" not in st.session_state:
+        st.warning("Please run an analysis first on the main page.")
+        return
+
+    if st.button("📥 Generate PDF Report"):
+        pdf_file = generate_pdf(
+            st.session_state.chart_image,
+            st.session_state.feedback,
+            st.session_state.job_title,
+            st.session_state.company_name
+        )
+
+        st.download_button(
+            label="📄 Download PDF",
+            data=pdf_file,
+            file_name="resume_feedback.pdf",
+            mime="application/pdf"
+        )
