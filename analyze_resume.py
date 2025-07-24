@@ -3,6 +3,7 @@ import streamlit as st
 import openai
 from openai import OpenAI
 import re
+import io
 import matplotlib.pyplot as plt
 import numpy as np
 from io import BytesIO
@@ -104,7 +105,8 @@ JOB DESCRIPTION:
             chart_buffer = BytesIO()
             fig.savefig(chart_buffer, format="png")
             chart_buffer.seek(0)
-            st.session_state.chart_image = chart_buffer
+            st.session_state.chart_image = chart_buffer.getvalue()  # <-- this returns raw PNG bytes
+
 
             st.markdown("### 📋 Feedback")
             st.markdown(output)
