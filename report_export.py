@@ -1,69 +1,38 @@
-# report_export.py
 import streamlit as st
 from fpdf import FPDF
+import io
 from PIL import Image
-from io import BytesIO
 
-def generate_pdf(chart_img_bytes, feedback_text, job_title, company_name):
+def generate_pdf(chart_img, feedback_text, job_title, company_name):
     pdf = FPDF()
     pdf.add_page()
 
-    # Header
-    pdf.set_font("Arial", 'B', 16)
-    pdf.cell(0, 10, "Resume Optimization Report", ln=True, align='C')
-    pdf.ln(10)
+    # Title section
+    pdf.set_font("Arial", "B", 16)
+    pdf.cell(0, 10, "GPT Resume Feedback Report", ln=True, align="C")
 
-    # Job Info
-    pdf.set_font("Arial", '', 12)
+    pdf.set_font("Arial", "", 12)
+    pdf.ln(10)
     pdf.cell(0, 10, f"Job Title: {job_title}", ln=True)
     pdf.cell(0, 10, f"Company: {company_name}", ln=True)
+
+    # Insert radar chart
     pdf.ln(10)
+    pdf.set_font("Arial", "B", 14)
+    pdf.cell(0, 10, "ATS Score Breakdown", ln=True)
 
-    # Chart Image
-    image = Image.open(chart_img_bytes)
-    temp_path = "/tmp/chart.png"
-    image.save(temp_path)
-    pdf.image(temp_path, x=30, y=None, w=150)
-    pdf.ln(85)
+    if chart_img:
+        img = Image.open(io.BytesIO(chart_img))
+        img_path = "/tmp/chart.png"
+        img.save(img_path)
+        pdf.image(img_path, x=40, y=None, w=130)
 
-    # Feedback
-    pdf.set_font("Arial", 'B', 14)
-    pdf.cell(0, 10, "AI Feedback", ln=True)
-    pdf.set_font("Arial", '', 11)
-    for line in feedback_text.split("\n"):
-        pdf.multi_cell(0, 8, line)
+    # Add feedback text
+    pdf.ln(10)
+    pdf.set_font("Arial", "B", 14)
+    pdf.cell(0, 10, "AI Feedback & Suggestions", ln=True)
+    pdf.ln(5)
+    pdf.set_font("Arial", "", 11)
 
-    # Output as buffer
-    pdf_buffer = BytesIO()
-    pdf.output(pdf_buffer)
-    pdf_buffer.seek(0)
-    return pdf_buffer
+    for line in feedback_text.sp_
 
-def run():
-    st.title("📥 Download Resume Report")
-
-    if not all(k in st.session_state for k in ["feedback_text", "chart_image", "job_title", "company_name"]):
-        st.warning("⚠️ You need to analyze a resume first on the 'Analyze Resume' page.")
-        return
-
-    # Display summary info
-    st.write(f"**Job Title:** {st.session_state.job_title}")
-    st.write(f"**Company Name:** {st.session_state.company_name}")
-    st.markdown("### 📋 Feedback Preview")
-    st.markdown(st.session_state.feedback_text)
-
-    # Generate PDF
-    pdf_file = generate_pdf(
-        st.session_state.chart_image,
-        st.session_state.feedback_text,
-        st.session_state.job_title,
-        st.session_state.company_name
-    )
-
-    # Download button
-    st.download_button(
-        label="📥 Download PDF Report",
-        data=pdf_file,
-        file_name="resume_analysis_report.pdf",
-        mime="application/pdf"
-    )
