@@ -88,19 +88,23 @@ JOB DESCRIPTION:
             labels = categories
             num_vars = len(labels)
             angles = np.linspace(0, 2 * np.pi, num_vars, endpoint=False).tolist()
-            scores += scores[:1]
-            angles += angles[:1]
+
+            # Make the radar loop by repeating the first value at the end
+            scores_plot = scores + scores[:1]
+            angles_plot = angles + angles[:1]
+            labels_plot = labels + labels[:1]  # for safety, not always needed
 
             fig, ax = plt.subplots(figsize=(6, 6), subplot_kw=dict(polar=True))
-            ax.plot(angles, scores, color='blue', linewidth=2)
-            ax.fill(angles, scores, color='skyblue', alpha=0.4)
+            ax.plot(angles_plot, scores_plot, color='blue', linewidth=2)
+            ax.fill(angles_plot, scores_plot, color='skyblue', alpha=0.4)
             ax.set_yticks([2, 4, 6, 8, 10])
             ax.set_yticklabels(['2', '4', '6', '8', '10'])
-            ax.set_xticks(angles[:-1])
+            ax.set_xticks(angles)
             ax.set_xticklabels(labels)
             ax.set_title("ATS Resume Match Breakdown", size=14, y=1.08)
 
             st.pyplot(fig)
+
 
             chart_buffer = BytesIO()
             fig.savefig(chart_buffer, format="png")
