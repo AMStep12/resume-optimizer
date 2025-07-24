@@ -105,6 +105,8 @@ JOB DESCRIPTION:
 
             st.pyplot(fig)"""
 
+            st.write("Scores extracted from GPT:", scores)
+
             # Debugging test plot
             scores_plot = [6, 7, 8, 5, 6]
             labels = ["Skills Match", "Keyword Match", "Experience", "Alignment", "Clarity"]
