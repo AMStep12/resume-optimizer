@@ -85,7 +85,7 @@ JOB DESCRIPTION:
             st.session_state.chart_scores = scores
 
             # Radar chart
-            labels = categories
+            """labels = categories
             num_vars = len(labels)
             angles = np.linspace(0, 2 * np.pi, num_vars, endpoint=False).tolist()
 
@@ -103,8 +103,24 @@ JOB DESCRIPTION:
             ax.set_xticklabels(labels)
             ax.set_title("ATS Resume Match Breakdown", size=14, y=1.08)
 
-            st.pyplot(fig)
+            st.pyplot(fig)"""
 
+            # Debugging test plot
+            scores_plot = [6, 7, 8, 5, 6]
+            labels = ["Skills Match", "Keyword Match", "Experience", "Alignment", "Clarity"]
+            angles = np.linspace(0, 2 * np.pi, len(scores_plot), endpoint=False).tolist()
+            scores_plot += scores_plot[:1]
+            angles += angles[:1]
+            
+            fig, ax = plt.subplots(figsize=(6, 6), subplot_kw=dict(polar=True))
+            ax.plot(angles, scores_plot, color='red', linewidth=2)
+            ax.fill(angles, scores_plot, color='red', alpha=0.25)
+            ax.set_xticks(angles[:-1])
+            ax.set_xticklabels(labels)
+            ax.set_yticks([2, 4, 6, 8, 10])
+            ax.set_title("DEBUG: Radar Chart")
+            
+            st.pyplot(fig)
 
             chart_buffer = BytesIO()
             fig.savefig(chart_buffer, format="png")
