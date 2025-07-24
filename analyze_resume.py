@@ -79,7 +79,7 @@ JOB DESCRIPTION:
             scores = []
 
             for category in categories:
-                match = re.search(rf"{category}:\\s*(\\d+)", output)
+                match = re.search(rf"{re.escape(category)}\s*[:\-–]?\s*(\d+)", output, re.IGNORECASE)
                 scores.append(int(match.group(1)) if match else 0)
 
             st.session_state.chart_scores = scores
