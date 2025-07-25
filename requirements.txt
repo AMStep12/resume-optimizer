@@ -3,6 +3,7 @@ openai
 matplotlib
 numpy
 fpdf
+pdfplumber
 python-docx
 PyMuPDF
 Pillow
